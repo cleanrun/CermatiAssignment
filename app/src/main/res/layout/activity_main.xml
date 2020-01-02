@@ -51,6 +51,7 @@
                         android:background="@drawable/shape_rectangle_fill_white"
                         android:hint="Search Github users"
                         android:textSize="12sp"
+                        android:inputType="text"
                         android:maxLines="1"/>
 
                 </LinearLayout>

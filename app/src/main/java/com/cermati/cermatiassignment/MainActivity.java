@@ -25,7 +25,7 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
-// Name : Muhammad Marchell
+    // Name : Muhammad Marchell
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -60,6 +60,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         llNoData = findViewById(R.id.ll_no_data);
 
         cvSearch.setOnClickListener(this);
+        etSearch.requestFocus();
 
         initRecyclerView();
         checkData();
@@ -93,23 +94,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 .subscribe(new Observer<CharSequence>() {
                     @Override
                     public void onSubscribe(Disposable d) {
-                        Log.d(TAG, "onSubscribe: etwatcher");
+                        Log.d(TAG, "editTextWatcher: onSubscribe");
                     }
 
                     @Override
                     public void onNext(CharSequence charSequence) {
-                        Log.d(TAG, "onNext: etwacther " + charSequence);
+                        Log.d(TAG, "editTextWatcher: onNext " + charSequence);
                         getSearchObserver(charSequence.toString());
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        Log.d(TAG, "onError: etwatcher " + e.getMessage());
+                        Log.d(TAG, "editTextWatcher: onError " + e.getMessage());
                     }
 
                     @Override
                     public void onComplete() {
-                        Log.d(TAG, "onComplete: etwatcher");
+                        Log.d(TAG, "editTextWatcher: onComplete");
                     }
                 });
     }
@@ -125,6 +126,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     public ObservableSource<Model> apply(ResponseSearch<Model> modelResponseSearch) throws Exception {
                         adapter.setData(modelResponseSearch.getItems());
                         checkData();
+
+                        if(modelResponseSearch.getTotal_count() == 0){
+                            showToast("No Data Found");
+                        }
+
                         return Observable.fromIterable(modelResponseSearch.getItems())
                                 .subscribeOn(Schedulers.io());
                     }
@@ -150,29 +156,30 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 .subscribe(new Observer<Model>() {
                     @Override
                     public void onSubscribe(Disposable d) {
-                        Log.d(TAG, "onSubscribe: called");
+                        Log.d(TAG, "getSearchObserver: onSubscribe ");
                     }
 
                     @Override
                     public void onNext(Model model) {
-                        Log.d(TAG, "onNext: called");
+                        Log.d(TAG, "getSearchObserver: onNext");
                         Log.d(TAG, "Name : " + model.getName() + "\n" + "Image : " + model.getImage() );
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        Log.e(TAG, "onError: " + e.getMessage() );
+                        Log.e(TAG, "getSearchObserver: onError " + e.getMessage() );
+
                         if(e.getMessage().equals("HTTP 422 Unprocessable Entity")){
                             Log.d(TAG, "onError: HTTP 422");
                             // do nothing
                         }else{
-                            showToast("Something wrong just happened :(");
+                            showToast("Something wrong just happened, please try again later.");
                         }
                     }
 
                     @Override
                     public void onComplete() {
-                        Log.d(TAG, "onComplete: called");
+                        Log.d(TAG, "getSearchObserver: onComplete");
                     }
                 });
     }

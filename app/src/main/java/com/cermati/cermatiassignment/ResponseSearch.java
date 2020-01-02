@@ -18,6 +18,10 @@ public class ResponseSearch<Model> {
     @Expose
     private ArrayList<Model> items;
 
+    @SerializedName("message")
+    @Expose
+    private String message;
+
     public int getTotal_count() {
         return total_count;
     }
@@ -40,5 +44,13 @@ public class ResponseSearch<Model> {
 
     public void setItems(ArrayList<Model> items) {
         this.items = items;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 }
