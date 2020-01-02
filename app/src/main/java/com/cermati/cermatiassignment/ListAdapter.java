@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -22,9 +23,11 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ItemHolder>{
 
     private Context activityContext;
     private List<Model> listData = new ArrayList<>();
+    private ClickListener clickListener;
 
-    public ListAdapter(Context activityContext) {
+    public ListAdapter(Context activityContext, ClickListener clickListener) {
         this.activityContext = activityContext;
+        this.clickListener = clickListener;
         //this.listData = listData;
     }
 
@@ -36,12 +39,20 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ItemHolder>{
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ItemHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ItemHolder holder, final int position) {
         holder.tvName.setText(listData.get(position).getName());
         Picasso.get()
                 .load(listData.get(position).getImage())
                 .placeholder(R.drawable.progress_animation)
                 .into(holder.ivPhoto);
+
+        // showing the model id and url on click
+        holder.llList.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                clickListener.onListClick(listData.get(position));
+            }
+        });
     }
 
     @Override
@@ -68,14 +79,20 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ItemHolder>{
     }
 
     public class ItemHolder extends RecyclerView.ViewHolder{
+        private LinearLayout llList;
         private ImageView ivPhoto;
         private TextView tvName;
 
         public ItemHolder(@NonNull View itemView) {
             super(itemView);
 
+            llList = itemView.findViewById(R.id.ll_list);
             ivPhoto = itemView.findViewById(R.id.iv_photo);
             tvName = itemView.findViewById(R.id.tv_name);
         }
+    }
+
+    public interface ClickListener{
+        void onListClick(Model model);
     }
 }

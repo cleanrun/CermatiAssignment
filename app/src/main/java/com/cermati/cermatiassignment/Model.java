@@ -8,14 +8,17 @@ public class Model {
     @Expose
     private String name;
 
+    @SerializedName("id")
+    @Expose
+    private int id;
+
     @SerializedName("avatar_url")
     @Expose
     private String image;
 
-    public Model(String name, String image) {
-        this.name = name;
-        this.image = image;
-    }
+    @SerializedName("html_url")
+    @Expose
+    private String html_url;
 
     public String getName() {
         return name;
@@ -25,11 +28,27 @@ public class Model {
         this.name = name;
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
     public String getImage() {
         return image;
     }
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public String getHtml_url() {
+        return html_url;
+    }
+
+    public void setHtml_url(String html_url) {
+        this.html_url = html_url;
     }
 }
